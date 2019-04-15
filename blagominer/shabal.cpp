@@ -32,11 +32,11 @@ void procscoop_sph(const unsigned long long nonce, const unsigned long long n, c
 
 		unsigned long long *wertung = (unsigned long long*)res;
 
-		if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
+		//if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
 		{
-			if (*wertung < bests[acc].best)
+			if (*wertung <= bests[acc].poolDiff)
 			{
-				Log("\nfound deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
+				Log("\nfound share, deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
 				EnterCriticalSection(&bestsLock);
 				bests[acc].best = *wertung;
 				bests[acc].nonce = nonce + v;
@@ -138,11 +138,11 @@ void procscoop_sse_fast(unsigned long long const nonce, unsigned long long const
 			posn = 3;
 		}
 
-		if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
+		//if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
 		{
-			if (*wertung < bests[acc].best)
+			if (*wertung <= bests[acc].poolDiff)
 			{
-				Log("\nfound deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
+				Log("\nfound share, deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
 				EnterCriticalSection(&bestsLock);
 				bests[acc].best = *wertung;
 				bests[acc].nonce = nonce + v + posn;
@@ -244,11 +244,11 @@ void procscoop_avx_fast(unsigned long long const nonce, unsigned long long const
 			posn = 3;
 		}
 
-		if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
+		//if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
 		{
-			if (*wertung < bests[acc].best)
+			if (*wertung <= bests[acc].poolDiff)
 			{
-				Log("\nfound deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
+				Log("\nfound share, deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
 				EnterCriticalSection(&bestsLock);
 				bests[acc].best = *wertung;
 				bests[acc].nonce = nonce + v + posn;
@@ -395,11 +395,11 @@ void procscoop_avx2_fast(unsigned long long const nonce, unsigned long long cons
 			posn = 7;
 		}
 
-		if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
+		//if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
 		{
-			if (*wertung < bests[acc].best)
+			if (*wertung <= bests[acc].poolDiff)
 			{
-				Log("\nfound deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
+				Log("\nfound share, deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
 				EnterCriticalSection(&bestsLock);
 				bests[acc].best = *wertung;
 				bests[acc].nonce = nonce + v + posn;
@@ -636,11 +636,11 @@ void procscoop_avx512_fast(unsigned long long const nonce, unsigned long long co
 
 
 
-		if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
+		//if ((*wertung / baseTarget) <= bests[acc].targetDeadline)
 		{
-			if (*wertung < bests[acc].best)
+			if (*wertung <= bests[acc].poolDiff)
 			{
-				Log("\nfound deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
+				Log("\nfound share, deadline=");	Log_llu(*wertung / baseTarget); Log(" nonce=");	Log_llu(nonce + v + posn); Log(" for account: "); Log_llu(bests[acc].account_id); Log(" file: "); Log((char*)file_name.c_str());
 				EnterCriticalSection(&bestsLock);
 				bests[acc].best = *wertung;
 				bests[acc].nonce = nonce + v + posn;

@@ -45,7 +45,7 @@ void work_i(const size_t local_num)
 		unsigned long long key, nonce, nonces, stagger, offset, tail;
 		bool p2, bfs;
 		QueryPerformanceCounter((LARGE_INTEGER*)&start_time_read);
-		key = iter->Key;
+		key = iter->Key; //account numericId
 		nonce = iter->StartNonce;
 		nonces = iter->Nonces;
 		stagger = iter->Stagger;
@@ -199,7 +199,7 @@ void work_i(const size_t local_num)
 		bool flip = false;
 
 
-		size_t acc = Get_index_acc(key);
+		size_t acc = GetAccountIndexFromBests(key); //account maybe different between files
 		for (unsigned long long n = 0; n < nonces; n += stagger)
 		{
 			cache_size_local = cache_size_local_backup;

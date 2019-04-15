@@ -305,7 +305,7 @@ void proxy_i(void)
 
 							//Подтверждаем
 							RtlSecureZeroMemory(buffer, buffer_size);
-							size_t acc = Get_index_acc(get_accountId);
+							size_t acc = GetAccountIndexFromBests(get_accountId);
 							int bytes = sprintf_s(buffer, buffer_size, "HTTP/1.0 200 OK\r\nConnection: close\r\n\r\n{\"result\": \"proxy\",\"accountId\": %llu,\"deadline\": %llu,\"targetDeadline\": %llu}", get_accountId, get_deadline / baseTarget, bests[acc].targetDeadline);
 							iResult = send(ClientSocket, buffer, bytes, 0);
 							if (iResult == SOCKET_ERROR)
@@ -400,13 +400,13 @@ void send_i(void)
 		{
 
 			//Гасим шару если она больше текущего targetDeadline, актуально для режима Proxy
-			if ((iter->best / baseTarget) > bests[Get_index_acc(iter->account_id)].targetDeadline)
+			if (iter->best > bests[GetAccountIndexFromBests(iter->account_id)].poolDiff)
 			{
 				if (use_debug)
 				{
 					_strtime_s(tbuffer);
 					bm_wattron(2);
-					bm_wprintw("%s [%20llu]\t%llu > %llu  discarded\n", tbuffer, iter->account_id, iter->best / baseTarget, bests[Get_index_acc(iter->account_id)].targetDeadline, 0);
+					bm_wprintw("%s [%20llu]\t%llu > %llu  discarded\n", tbuffer, iter->account_id, iter->best / baseTarget, bests[GetAccountIndexFromBests(iter->account_id)].targetDeadline, 0);
 					bm_wattroff(2);
 				}
 				EnterCriticalSection(&sharesLock);
@@ -457,11 +457,11 @@ void send_i(void)
 
 				int bytes = 0;
 				RtlSecureZeroMemory(buffer, buffer_size);
-				if (miner_mode == 0)
+				if (miner_mode == 0) //solo
 				{
 					bytes = sprintf_s(buffer, buffer_size, "POST /burst?requestType=submitNonce&secretPhrase=%s&nonce=%llu HTTP/1.0\r\nConnection: close\r\n\r\n", pass, iter->nonce);
 				}
-				if (miner_mode == 1)
+				if (miner_mode == 1) //pool
 				{
 					unsigned long long total = total_size / 1024 / 1024 / 1024;
 					for (auto It = satellite_size.begin(); It != satellite_size.end(); ++It) total = total + It->second;
@@ -493,7 +493,7 @@ void send_i(void)
 					sessions.push_back({ ConnectSocket, dl, *iter });
 					LeaveCriticalSection(&sessionsLock);
 
-					bests[Get_index_acc(iter->account_id)].targetDeadline = dl;
+					bests[GetAccountIndexFromBests(iter->account_id)].targetDeadline = dl;
 					EnterCriticalSection(&sharesLock);
 					iter = shares.erase(iter);
 					LeaveCriticalSection(&sharesLock);
@@ -597,7 +597,7 @@ void send_i(void)
 									if ((naccountId != 0) && (ntargetDeadline != 0))
 									{
 										EnterCriticalSection(&bestsLock);
-										bests[Get_index_acc(naccountId)].targetDeadline = ntargetDeadline;
+										bests[GetAccountIndexFromBests(naccountId)].targetDeadline = ntargetDeadline;
 										LeaveCriticalSection(&bestsLock);
 										bm_wprintw("%s [%20llu] confirmed DL: %10llu %5llud %02u:%02u:%02u\n", tbuffer, naccountId, ndeadline, days, hours, min, sec, 0);
 										if (use_debug) bm_wprintw("%s [%20llu] set targetDL: %10llu\n", tbuffer, naccountId, ntargetDeadline, 0);
@@ -635,7 +635,7 @@ void send_i(void)
 							if (strstr(find, "Received share") != nullptr)
 							{
 								_strtime_s(tbuffer);
-								deadline = bests[Get_index_acc(iter->body.account_id)].DL; //может лучше iter->deadline ?
+								deadline = bests[GetAccountIndexFromBests(iter->body.account_id)].DL; //может лучше iter->deadline ?
 																						   // if(deadline > iter->deadline) deadline = iter->deadline;
 								bm_wattron(10);
 								bm_wprintw("%s [%20llu] confirmed DL   %10llu\n", tbuffer, iter->body.account_id, iter->deadline, 0);

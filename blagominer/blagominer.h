@@ -62,6 +62,8 @@ struct t_shares {
 	std::string file_name;
 	unsigned long long account_id;// = 0;
 	unsigned long long best;// = 0;
+  unsigned long long baseTarget;// = 0;
+  unsigned long long dl;// = 0;
 	unsigned long long nonce;// = 0;
 };
 
@@ -73,6 +75,7 @@ struct t_best {
 	unsigned long long nonce;// = 0;
 	unsigned long long DL;// = 0;
 	unsigned long long targetDeadline;// = 0;
+  unsigned long long poolDiff;
 };
 
 extern std::vector<t_best> bests;
